@@ -9,9 +9,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      * 1.0.1.0: Configurable method to find registered types in ServiceLocatorExtensions
     </releaseNotes>
     <copyright>Copyright © Marco Stolze 2014</copyright>
-    <tags>MassTransit ServiceBus .net</tags>
+    <tags>MassTransit ServiceBus .net mef</tags>
   </metadata>
 </package>
