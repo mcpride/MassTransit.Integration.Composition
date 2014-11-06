@@ -71,7 +71,7 @@ namespace MassTransit.Integration.Composition
         private static Func<Type, ExportProvider, Func<Type, bool>, IEnumerable<Type>> _findTypes =
             (serviceType, exportProvider, filter) =>
             {
-                var instances = exportProvider.GetExports<object>(AttributedModelServices.GetContractName(serviceType));
+                var instances = exportProvider.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
                 var results = new List<Type>();
                 foreach (var foundType in instances
                     .Select(instance => instance.GetType())
