@@ -4,7 +4,7 @@ See also MassTransit http://masstransit-project.com
 
 ## Example: Usage with MEF
 
-* Let your consumer or saga export its concrete type and "IConsumer" and set the creation policy:
+* Let your consumer or saga export the "IConsumer" contract name and its concrete contract type by using the "ExportConsumer" attribute. Also set the creation policy:
 
 ```C#
 [ExportConsumer(typeof(CustomerEventHandler))]
