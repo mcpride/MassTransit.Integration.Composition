@@ -7,8 +7,7 @@ See also MassTransit http://masstransit-project.com
 * Let your consumer or saga export its concrete type and "IConsumer" and set the creation policy:
 
 ```C#
-[Export(typeof(IConsumer))]
-[Export(typeof(CustomerEventHandler))]
+[ExportConsumer(typeof(CustomerEventHandler))]
 [PartCreationPolicy(CreationPolicy.NonShared)]
 public class CustomerEventHandler : IEventHandler, 
     Consumes<CustomerCreated>.All, Consumes<CustomerChanged>.All, Consumes<CustomerRemoved>.All

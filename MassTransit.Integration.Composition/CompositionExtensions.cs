@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using Magnum.Extensions;
@@ -31,7 +30,7 @@ namespace MassTransit.Integration.Composition
 
         public static void LoadFrom(this SubscriptionBusServiceConfigurator configurator, ExportProvider exportProvider, Predicate<Type> filter)
         {
-            var concreteTypes = _findTypes(typeof(IConsumer), exportProvider, x => (!x.Implements<ISaga>() && filter(x))).ToList();
+            var concreteTypes = FindConsumerTypes(exportProvider, x => (!x.Implements<ISaga>() && filter(x))).ToList();
             if (concreteTypes.Any())
             {
                 var consumerConfigurator = new CompositionConsumerFactoryConfigurator(configurator, exportProvider);
@@ -40,7 +39,7 @@ namespace MassTransit.Integration.Composition
                     consumerConfigurator.ConfigureConsumer(concreteType);
             }
 
-            var sagaTypes = _findTypes(typeof(ISaga), exportProvider, x => filter(x)).ToList();
+            var sagaTypes = FindSagaTypes(exportProvider, x => filter(x)).ToList();
             if (sagaTypes.Any()) return;
             var sagaConfigurator = new CompositionSagaFactoryConfigurator(configurator, exportProvider);
 
@@ -68,27 +67,32 @@ namespace MassTransit.Integration.Composition
             return configurator.Saga(compositionSagaRepository);
         }
 
-        private static Func<Type, ExportProvider, Func<Type, bool>, IEnumerable<Type>> _findTypes =
-            (serviceType, exportProvider, filter) =>
-            {
-                var instances = exportProvider.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
-                var results = new List<Type>();
-                foreach (var foundType in instances
-                    .Select(instance => instance.GetType())
-                    .Where(filter)
-                    .Where(foundType => !results.Contains(foundType)))
-                {
-                    results.Add(foundType);
-                }
-                return results;
-            };
-
-        public static class Configure
+        private static IEnumerable<Type> FindConsumerTypes(ExportProvider exportProvider, Func<Type, bool> filter)
         {
-            public static void MethodToFindTypes(Func<Type, ExportProvider, Func<Type, bool>, IEnumerable<Type>> method)
+            var exports = exportProvider.GetExports<IConsumer, IConsumerMetadata>();
+            var results = new List<Type>();
+            foreach (var type in exports
+                .Select(contractType => contractType.Metadata.ContractType)
+                .Where(filter)
+                .Where(type => !results.Contains(type)))
             {
-                _findTypes = method;
+                results.Add(type);
             }
+            return results;
+        }
+
+        private static IEnumerable<Type> FindSagaTypes(ExportProvider exportProvider, Func<Type, bool> filter)
+        {
+            var exports = exportProvider.GetExports<ISaga, ISagaMetadata>();
+            var results = new List<Type>();
+            foreach (var type in exports
+                .Select(contractType => contractType.Metadata.ContractType)
+                .Where(filter)
+                .Where(type => !results.Contains(type)))
+            {
+                results.Add(type);
+            }
+            return results;
         }
     }
 }

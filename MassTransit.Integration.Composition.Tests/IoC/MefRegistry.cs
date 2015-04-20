@@ -12,8 +12,8 @@ namespace MassTransit.Integration.Composition.Tests.IoC
         {
             registration.ForTypesDerivedFrom<TestHandlerBase>()
                 .SetCreationPolicy(CreationPolicy.NonShared)
-                .Export()
-                .Export<IConsumer>();
+                .Export<IConsumer>(builder => builder
+                    .AddMetadata("ContractType", t => t));
             return registration;
         }
 
