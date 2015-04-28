@@ -10,7 +10,7 @@
     <description>$description$</description>
     <releaseNotes>
     </releaseNotes>
-    <copyright>Copyright © Marco Stolze 2014</copyright>
+    <copyright>Copyright © Marco Stolze 2015</copyright>
     <tags>MassTransit ServiceBus .net mef</tags>
   </metadata>
 </package>

@@ -10,9 +10,7 @@ namespace MassTransit.Integration.Composition.Tests.Specs
     {
         public ExportProvider GetExportProvider(object part)
         {
-            var registry = new RegistrationBuilder().Registrate();
-            var catalog = registry.GetCatalog();
-            var container = new CompositionContainer(catalog);
+            var container = new CompositionContainer(new RegistrationBuilder().Registrate().GetCatalog());
             container.SatisfyImportsOnce(part);
             return container;
         }

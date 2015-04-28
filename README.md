@@ -4,9 +4,10 @@ See also MassTransit http://masstransit-project.com
 
 ## Example: Usage with MEF
 
-* Let your consumer or saga export the "IConsumer" contract name and its concrete contract type by using the "ExportConsumer" attribute. Also set the creation policy:
+* Let your consumer or saga export the "IConsumer" contract name and its concrete contract type as metadata by using the "ExportConsumer" attribute. Also set the creation policy:
 
 ```C#
+
 [ExportConsumer(typeof(CustomerEventHandler))]
 [PartCreationPolicy(CreationPolicy.NonShared)]
 public class CustomerEventHandler : IEventHandler, 
@@ -27,11 +28,18 @@ public class CustomerEventHandler : IEventHandler,
         Console.WriteLine("Customer with id '{0}' has been removed", @event.Id);
     }
 }
+
+// just a marker interface used below for filtering
+public interface IEventHandler
+{
+}
+
 ```
 
 * Subscribe your consumers with the extension method magic with or without filters:
 
 ```C#
+
 var bus = ServiceBusFactory.New(sbc =>
 {
 	sbc.UseMsmq(mqc =>
@@ -40,8 +48,39 @@ var bus = ServiceBusFactory.New(sbc =>
 		mqc.VerifyMsmqConfiguration();
 	});
 	sbc.ReceiveFrom("msmq://localhost/sampleQueue");
-    sbc.Subscribe(configurator => configurator.LoadFrom(compositionContainer, x => x.Implements<IEventHandler>()));
+    sbc.Subscribe(configurator => configurator.LoadFrom(compositionContainer, type => type.Implements<IEventHandler>()));
 });
 
 ```
-(in example: filtered by predicate: x => x.Implements...)
+
+(in example: filtered by predicate: type => type.Implements...)
+
+
+## Example for MEF fluent export instead of attributes usage:
+
+```C#
+
+public static class MefRegistry
+{
+    public static RegistrationBuilder Registrate(this RegistrationBuilder registration)
+    {
+        registration.ForTypesDerivedFrom<TestHandlerBase>()
+            .SetCreationPolicy(CreationPolicy.NonShared)
+            .Export<IConsumer>(builder => builder
+                .AddMetadata("ContractType", type => type));
+        return registration;
+    }
+
+    public static ComposablePartCatalog GetCatalog(this RegistrationBuilder registration)
+    {
+        return new AssemblyCatalog(typeof (MefRegistry).Assembly, registration);
+    }
+}
+
+
+...
+
+var container = new CompositionContainer(new RegistrationBuilder().Registrate().GetCatalog());
+...
+
+```
