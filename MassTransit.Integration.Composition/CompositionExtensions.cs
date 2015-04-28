@@ -40,7 +40,7 @@ namespace MassTransit.Integration.Composition
             }
 
             var sagaTypes = FindSagaTypes(exportProvider, x => filter(x)).ToList();
-            if (sagaTypes.Any()) return;
+            if (!sagaTypes.Any()) return;
             var sagaConfigurator = new CompositionSagaFactoryConfigurator(configurator, exportProvider);
 
             foreach (var type in sagaTypes)
@@ -69,7 +69,7 @@ namespace MassTransit.Integration.Composition
 
         private static IEnumerable<Type> FindConsumerTypes(ExportProvider exportProvider, Func<Type, bool> filter)
         {
-            var exports = exportProvider.GetExports<IConsumer, IConsumerMetadata>();
+            var exports = exportProvider.GetExports<IConsumer, IContractMetadata>();
             var results = new List<Type>();
             foreach (var type in exports
                 .Select(contractType => contractType.Metadata.ContractType)
@@ -83,7 +83,7 @@ namespace MassTransit.Integration.Composition
 
         private static IEnumerable<Type> FindSagaTypes(ExportProvider exportProvider, Func<Type, bool> filter)
         {
-            var exports = exportProvider.GetExports<ISaga, ISagaMetadata>();
+            var exports = exportProvider.GetExports<ISaga, IContractMetadata>();
             var results = new List<Type>();
             foreach (var type in exports
                 .Select(contractType => contractType.Metadata.ContractType)

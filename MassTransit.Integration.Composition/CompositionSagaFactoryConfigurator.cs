@@ -39,7 +39,8 @@ namespace MassTransit.Integration.Composition
         public void Configure<T>()
             where T : class, ISaga
         {
-            var sagaRepository = _exportProvider.GetExportedValue<ISagaRepository<T>>();
+            var sagaRepository = _exportProvider.GetExportedValueOrDefault<ISagaRepository<T>>() ??
+                                 new InMemorySagaRepository<T>();
 
             var compositionSagaRepository = new CompositionSagaRepository<T>(sagaRepository, _exportProvider);
             _configurator.Saga(compositionSagaRepository);

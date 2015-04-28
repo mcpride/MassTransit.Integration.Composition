@@ -31,7 +31,7 @@ namespace MassTransit.Integration.Composition
         public IEnumerable<Action<IConsumeContext<TMessage>>> GetConsumer<TMessage>(
             IConsumeContext<TMessage> context, InstanceHandlerSelector<T, TMessage> selector) where TMessage : class
         {
-            var exports = _exportProvider.GetExports<IConsumer, IConsumerMetadata>();
+            var exports = _exportProvider.GetExports<IConsumer, IContractMetadata>();
             var consumer = (from export in exports where export.Metadata.ContractType == typeof (T) select (T) export.Value).FirstOrDefault();
             if (consumer == null)
                 throw new ConfigurationException(string.Format(StringResources.ErrorMessageUnableToResolveTypeFromServiceLocator(), typeof(T)));
