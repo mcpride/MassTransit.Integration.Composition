@@ -32,14 +32,10 @@ namespace MassTransit.Integration.Composition.Tests.Sagas
             });
         }
 
-        //public TestSaga()
-        //{
-        //}
-
-        //public TestSaga(Guid correlationId)
-        //{
-        //    CorrelationId = correlationId;
-        //}
+        public TestSaga(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
 
         public static State Initial { get; set; }
         public static State Completed { get; set; }
@@ -54,7 +50,7 @@ namespace MassTransit.Integration.Composition.Tests.Sagas
         public bool WasCompleted { get; set; }
 
         public string Name { get; set; }
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; private set; }
 
         public IServiceBus Bus { get; set; }
     }

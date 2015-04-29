@@ -81,9 +81,16 @@
     <Compile Include="Handlers\TestHandlerB.cs" />
     <Compile Include="Handlers\TestHandlerBase.cs" />
     <Compile Include="IoC\MefRegistry.cs" />
+    <Compile Include="Messages\CompleteSimpleSaga.cs" />
+    <Compile Include="Messages\InitiateSimpleSaga.cs" />
+    <Compile Include="Messages\ObservableSagaMessage.cs" />
+    <Compile Include="Messages\SimpleSagaMessageBase.cs" />
     <Compile Include="Messages\TestMessageA.cs" />
     <Compile Include="Messages\TestMessageBase.cs" />
+    <Compile Include="NewGuidFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\TestSagaRepository.cs" />
+    <Compile Include="Sagas\TestSaga.cs" />
     <Compile Include="Specs\MassTransitHandlerRegistrationSpecification.cs" />
     <Compile Include="Specs\MefRegistrationSpecificationBase.cs" />
   </ItemGroup>

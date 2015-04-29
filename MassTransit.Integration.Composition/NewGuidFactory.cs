@@ -12,11 +12,23 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.ComponentModel.Composition;
 
 namespace MassTransit.Integration.Composition
 {
-    public interface IContractMetadata
+
+    /// <summary>
+    /// Just a dummy helper for telling MEF that constructors with a Guid as parameter are handable.
+    /// </summary>
+    public class NewGuidFactory
     {
-        Type ContractType { get; }
+        [Export(typeof(Guid))]
+        public Guid NewGuid
+        {
+            get
+            {
+                return new Guid();
+            }
+        }
     }
 }
