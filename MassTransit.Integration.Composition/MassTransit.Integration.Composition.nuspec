@@ -9,6 +9,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+      - Handling changed by using special contract metadata. (See attributes "ExportConsumer" and "ExportSaga", description and tests)
+      - Tests and fixes for saga handling
     </releaseNotes>
     <copyright>Copyright © Marco Stolze 2015</copyright>
     <tags>MassTransit ServiceBus .net mef</tags>
