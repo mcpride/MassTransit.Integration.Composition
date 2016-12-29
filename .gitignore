@@ -115,3 +115,4 @@ UpgradeLog*.XML
 /packages/MS.QualityTools.UnitTestFramework.Specifications.Signed.*
 /packages/gitlink
 CodeMAP.dat
+Supercharger.dat

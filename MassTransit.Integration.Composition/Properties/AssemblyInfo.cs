@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 #endif
 [assembly: AssemblyCompany("Marco Stolze")]
 [assembly: AssemblyProduct("MassTransit.Integration.Composition")]
-[assembly: AssemblyCopyright("Copyright © Marco Stolze 2014, 2015")]
+[assembly: AssemblyCopyright("Copyright © Marco Stolze 2014-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("3f6ee35f-17c4-4be9-9180-80985dc083da")]
 
-[assembly: AssemblyVersion("1.0.5.0")]
-[assembly: AssemblyFileVersion("1.0.5.0")]
+[assembly: AssemblyVersion("1.0.6.0")]
+[assembly: AssemblyFileVersion("1.0.6.0")]
