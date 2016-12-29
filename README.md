@@ -58,7 +58,7 @@ var bus = ServiceBusFactory.New(sbc =>
 (in example: filtered by predicate: type => type.Implements...)
 
 
-### Example: Export consumers via fluent interface
+### Example: Alternative export of consumers via fluent api interface
 
 ```C#
 
@@ -90,7 +90,7 @@ var container = new CompositionContainer(new RegistrationBuilder().Registrate().
 ## Sagas
 
 The usage of sagas with the Microsoft Extensibility Framework in the manner of Masstransit is a little bit more complicated. Yo have to register the saga itself and a repository for this type of saga. 
-Also you must give MEF a way to inject a Guid in a constructor, because Masstansit requires such a constructor signature for saga implementations. MEF doen't really use this but it has to know how it could be handled. One solution could be the following dummy implementation:
+Also you must give MEF a way to inject a Guid in a constructor, because Masstansit requires such a constructor signature for saga implementations. MEF doesn't really use this but it has to know how it could be handled. One solution could be the following dummy implementation:
 
 ```C#
 
@@ -110,6 +110,9 @@ public class NewGuidFactory
 }
 
 ```
+
+Marking the constructor with attribute `[ImportingConstructor]` and the `Guid` constructor parameter with attribute `[Import(AllowDefault = true)]` might be another solution (see example below).
+
 
 ### Example: Export sagas via attributes
 
@@ -143,10 +146,11 @@ public class TestSaga : SagaStateMachine<TestSaga>, ISaga
 		});
 	}
 
-	public TestSaga(Guid correlationId)
-	{
-		CorrelationId = correlationId;
-	}
+    [ImportingConstructor]
+    public TestSaga([Import(AllowDefault = true)]Guid correlationId)
+    {
+        CorrelationId = correlationId;
+    }
 
 	public static State Initial { get; set; }
 	public static State Completed { get; set; }
@@ -174,13 +178,21 @@ public class TestSagaRepository : InMemorySagaRepository<TestSaga>
 
 ```
 
-### Example: Export sagas via fluent interface
+### Example: Alternative export of sagas via fluent api interface
 
 ```C#
 
 registration.ForTypesDerivedFrom<ISaga>()
-	.SetCreationPolicy(CreationPolicy.NonShared)
-	.Export<ISaga>(builder => builder.AddMetadata("ContractType", t => t));
+    .SetCreationPolicy(CreationPolicy.NonShared)
+    .SelectConstructor(
+        ctors => ctors.First(
+            info =>
+            {
+                var parameters = info.GetParameters();
+                if (parameters.Length != 1) return false;
+                return parameters[0].ParameterType == typeof (Guid);
+            }), (info, builder) => builder.AllowDefault())
+    .Export<ISaga>(builder => builder.AddMetadata("ContractType", t => t));
 
 registration.ForType<TestSagaRepository>()
 	.SetCreationPolicy(CreationPolicy.Shared)

@@ -9,10 +9,13 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - Handling changed by using special contract metadata. (See attributes "ExportConsumer" and "ExportSaga", description and tests)
-      - Tests and fixes for saga handling
+      - Code cleanup
+      - Masstransit dependency version upgrade to 2.10.2
     </releaseNotes>
-    <copyright>Copyright © Marco Stolze 2015</copyright>
+    <copyright>Copyright © Marco Stolze 2015-2017</copyright>
     <tags>MassTransit ServiceBus .net mef</tags>
+    <dependencies>
+      <dependency id="MassTransit" version="[2.10.2,3.0)" />
+    </dependencies>
   </metadata>
 </package>

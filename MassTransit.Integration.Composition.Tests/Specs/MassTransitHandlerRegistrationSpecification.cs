@@ -32,7 +32,7 @@ namespace MassTransit.Integration.Composition.Tests.Specs
                     testContext.State.Bus = ServiceBusFactory.New(sbc =>
                     {
                         sbc.ReceiveFrom("loopback://localhost/queue");
-                        sbc.Subscribe(configurator => configurator.LoadFrom((ExportProvider)testContext.State.Provider, type => type.Implements<TestHandlerBase>()));
+                        sbc.Subscribe(configurator => configurator.LoadFrom((ExportProvider)(testContext.State.Provider), type => type.Implements<TestHandlerBase>()));
                     });
                 })
             .When("a TestMessageA message is published over MassTransit message bus", 
@@ -58,13 +58,13 @@ namespace MassTransit.Integration.Composition.Tests.Specs
                     testContext.State.Bus = ServiceBusFactory.New(sbc =>
                     {
                         sbc.ReceiveFrom("loopback://localhost/queue");
-                        sbc.Subscribe(configurator => configurator.LoadFrom((ExportProvider)testContext.State.Provider, type => type.Implements<ISaga>()));
+                        sbc.Subscribe(configurator => configurator.LoadFrom((ExportProvider)(testContext.State.Provider), type => type.Implements<ISaga>()));
                     });
                 })
             .Then("a singleton of type ISagaRepository<TestSaga> should be initialized", testContext =>
             {
                 Assert.IsTrue(TestSagaRepository.Instance != null);
-                var repo = ((ExportProvider)testContext.State.Provider).GetExportedValueOrDefault<ISagaRepository<TestSaga>>();
+                var repo = ((ExportProvider)testContext.State.Provider).GetExportedValue<ISagaRepository<TestSaga>>();
                 return (repo == TestSagaRepository.Instance);
             });
         }

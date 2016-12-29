@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
+        <SolutionName Condition="'$(SolutionName)' == ''">MassTransit.Integration.Composition.Solution.sln</SolutionName>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
 
         <!-- Enable the restore command to run before builds -->
@@ -94,7 +95,8 @@
     </Target>
 
     <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">        
-        <Exec Command="$(RestoreCommand)"
+       <Exec Command="&quot;$(NuGetExePath)&quot; install gitlink -SolutionDir &quot;$(SolutionDir.Trim('\\'))&quot; -Verbosity quiet -ExcludeVersion -pre" Condition="!Exists('$(SolutionDir)\packages\gitlink\')" />
+		   <Exec Command="$(RestoreCommand)"
               Condition="'$(OS)' != 'Windows_NT' And Exists('$(PackagesConfig)')" />
 
         <Exec Command="$(RestoreCommand)"

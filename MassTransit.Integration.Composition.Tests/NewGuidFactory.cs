@@ -9,7 +9,7 @@ namespace MassTransit.Integration.Composition.Tests
     /// </summary>
     public class NewGuidFactory
     {
-        [Export(typeof(Guid))]
+        //[Export(typeof(Guid))]
         public Guid NewGuid
         {
             get
